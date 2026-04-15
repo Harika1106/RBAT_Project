@@ -408,15 +408,19 @@ def check_deadlines():
 
 # ---------------- RUN APP ----------------
 import os
+
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+
+    # 🔥 START SCHEDULER FIRST
     scheduler = BackgroundScheduler(daemon=True)
 
-    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        #scheduler.add_job(check_deadlines, 'interval', minutes=1)
-        scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
-        scheduler.start()
-        print("✅ Scheduler started")
+    scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
+    # testing:
+    # scheduler.add_job(check_deadlines, 'interval', minutes=1)
 
-    app.run(debug=True, use_reloader=False)
+    scheduler.start()
+    print("✅ Scheduler started")
+
+    # 🔥 RENDER PORT FIX
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
