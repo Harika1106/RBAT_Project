@@ -412,7 +412,8 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler(daemon=True)
 
     if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        scheduler.add_job(check_deadlines, 'interval', minutes=1)
+        #scheduler.add_job(check_deadlines, 'interval', minutes=1)
+        scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
         scheduler.start()
         print("✅ Scheduler started")
 
