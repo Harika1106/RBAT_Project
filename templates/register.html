@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+
+    <!-- ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: "Times New Roman";
+        }
+
+        .main-title {
+            font-size: 34px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .register-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 40px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .left-icon {
+            position: absolute;
+            left: 12px;
+            top: 13px;
+            color: gray;
+        }
+
+        .eye {
+            position: absolute;
+            right: 12px;
+            top: 13px;
+            cursor: pointer;
+        }
+
+        label {
+            position: absolute;
+            left: 40px;
+            top: 12px;
+            color: gray;
+            background: white;
+            padding: 0 5px;
+            transition: 0.3s;
+        }
+
+        input:focus + label,
+        input:valid + label {
+            top: -8px;
+            font-size: 11px;
+            color: #667eea;
+        }
+
+        /* PASSWORD BAR */
+        #strengthBar {
+            height: 6px;
+            width: 100%;
+            background: #ddd;
+            border-radius: 5px;
+        }
+
+        #strengthText {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        #matchText {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* POPUP */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-title">
+    Academic Task Prioritization & Deadline Management System
+</div>
+
+<div class="register-box">
+
+<h2>Create Account</h2>
+
+{% if error %}
+<script>
+    alert("{{ error }}");
+</script>
+{% endif %}
+
+<form method="POST">
+
+    <!-- FULL NAME -->
+    <div class="input-group">
+        <i class="fa fa-user left-icon"></i>
+        <input type="text" name="fullname" required>
+        <label>Full Name</label>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="input-group">
+        <i class="fa fa-envelope left-icon"></i>
+        <input type="email" name="email" required>
+        <label>Email</label>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="input-group">
+        <i class="fa fa-lock left-icon"></i>
+        <input type="password" id="password" name="password" required onkeyup="checkStrength()">
+        <label>Password</label>
+        <i class="fa fa-eye eye" onclick="togglePassword('password')"></i>
+    </div>
+
+    <div id="strengthBar"></div>
+    <p id="strengthText"></p>
+
+    <!-- CONFIRM PASSWORD -->
+    <div class="input-group">
+        <i class="fa fa-lock left-icon"></i>
+        <input type="password" id="confirm_password" name="confirm_password" required onkeyup="checkMatch()">
+        <label>Confirm Password</label>
+        <i class="fa fa-eye eye" onclick="togglePassword('confirm_password')"></i>
+    </div>
+
+    <p id="matchText"></p>
+
+    <!-- PHONE -->
+    <div class="input-group">
+        <i class="fa fa-phone left-icon"></i>
+        <input type="text" name="phone" required>
+        <label>Phone</label>
+    </div>
+
+    <!-- REGISTER NO -->
+    <div class="input-group">
+        <i class="fa fa-id-card left-icon"></i>
+        <input type="text" name="regno" required>
+        <label>Register No</label>
+    </div>
+
+    <button type="submit">Register</button>
+
+</form>
+
+<div class="link">
+    Already have an account? <a href="/">Login</a>
+</div>
+
+</div>
+
+<!-- SUCCESS POPUP -->
+<div id="successPopup" class="popup">
+    <h3>🎉 Registration Successful!</h3>
+    <p>Redirecting to login...</p>
+</div>
+
+<script>
+function togglePassword(id){
+    let field = document.getElementById(id);
+    field.type = field.type === "password" ? "text" : "password";
+}
+
+/* PASSWORD STRENGTH */
+function checkStrength() {
+    let password = document.getElementById("password").value;
+    let bar = document.getElementById("strengthBar");
+    let text = document.getElementById("strengthText");
+
+    let strength = 0;
+
+    if (password.length >= 6) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[@$!%*?&]/.test(password)) strength++;
+
+    if (strength <= 1) {
+        bar.style.width = "30%";
+        bar.style.background = "red";
+        text.innerHTML = "Weak";
+        text.style.color = "red";
+    } else if (strength <= 3) {
+        bar.style.width = "60%";
+        bar.style.background = "orange";
+        text.innerHTML = "Medium";
+        text.style.color = "orange";
+    } else {
+        bar.style.width = "100%";
+        bar.style.background = "green";
+        text.innerHTML = "Strong";
+        text.style.color = "green";
+    }
+}
+
+/* PASSWORD MATCH */
+function checkMatch() {
+    let p = document.getElementById("password").value;
+    let c = document.getElementById("confirm_password").value;
+    let msg = document.getElementById("matchText");
+
+    if (c.length === 0) {
+        msg.innerHTML = "";
+        return;
+    }
+
+    if (p === c) {
+        msg.innerHTML = "✔ Passwords match";
+        msg.style.color = "green";
+    } else {
+        msg.innerHTML = "❌ Passwords do not match";
+        msg.style.color = "red";
+    }
+}
+
+/* SUCCESS POPUP */
+window.onload = function() {
+    let success = {{ session.get('register_success', False) | tojson }};
+
+    if (success) {
+        document.getElementById("successPopup").style.display = "block";
+
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 2000);
+    }
+}
+</script>
+
+{% if session.get('register_success') %}
+    {% set _ = session.pop('register_success') %}
+{% endif %}
+
+</body>
+</html>

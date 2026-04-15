@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <!-- ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        /* 🔥 PROJECT TITLE */
+        .main-title {
+            font-family: "Times New Roman", serif;
+            font-size: 34px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* 🔥 LOGIN BOX BIGGER */
+        .login-box {
+            background: white;
+            padding: 50px 45px;
+            border-radius: 12px;
+            width: 480px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* 🔥 LOGIN HEADING */
+        h2 {
+            font-family: "Times New Roman", serif;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* INPUT GROUP */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 45px 14px 40px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            box-sizing: border-box; /* 🔥 IMPORTANT FIX */
+        }
+
+        /* LEFT ICON */
+        .input-group .left-icon {
+            position: absolute;
+            left: 12px;
+            top: 15px;
+            color: gray;
+        }
+
+        /* RIGHT EYE ICON */
+        .input-group .eye {
+            position: absolute;
+            right: 12px;
+            top: 15px;
+            cursor: pointer;
+            color: gray;
+        }
+
+        /* FLOATING LABEL */
+        .input-group label {
+            position: absolute;
+            left: 40px;
+            top: 14px;
+            color: gray;
+            font-size: 14px;
+            transition: 0.3s;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:valid + label {
+            top: -8px;
+            font-size: 11px;
+            color: #667eea;
+        }
+
+        /* REMEMBER */
+        .remember {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .remember input {
+            margin-right: 15px;
+        }
+
+        .forgot-row {
+    display: flex;
+    justify-content: flex-end;   /* 👉 right side */
+    margin-top: 8px;
+    margin-bottom: 15px;
+    padding-right: 5px;          /* 👉 equal spacing */
+}
+
+.forgot-row a {
+    font-size: 14px;             /* 👉 slightly bigger */
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-row a:hover {
+    text-decoration: underline;
+}
+
+        /* BUTTON */
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* LINK */
+        .link {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* ERROR */
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- 🔥 TITLE -->
+<div class="main-title">
+    Academic Task Prioritization & Deadline Management System
+</div>
+
+<div class="login-box">
+
+    <h2>Login</h2>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+
+        <!-- EMAIL -->
+        <div class="input-group">
+            <i class="fa fa-envelope left-icon"></i>
+            <input type="email" name="email" required>
+            <label>Email</label>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-group">
+            <i class="fa fa-lock left-icon"></i>
+            <input type="password" id="password" name="password" required>
+            <label>Password</label>
+            <i class="fa fa-eye eye" onclick="togglePassword()"></i>
+        </div>
+        <div style="text-align:right; margin-top:5px;">
+          <div class="forgot-row">
+    <a href="/forgot">Forgot Password?</a>
+       </div>
+
+        <button type="submit">Login</button>
+
+    </form>
+
+    <div class="link">
+        Don't have an account? <a href="/register">Register</a>
+    </div>
+
+</div>
+
+<script>
+function togglePassword() {
+    let pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+function showPopup(){
+    let popup = document.getElementById("popup");
+    popup.style.display = "block";
+
+    setTimeout(()=>{
+        window.location.href = "/";
+    },2000);
+}
+
+</script>
+
+</body>
+</html>

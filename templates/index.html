@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Academic Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Rule-Based Academic Task Prioritisation And Deadline Management System</h1>
+
+<h2>Add Task</h2>
+
+<form method="POST">
+    <label>Task Name:</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label>Deadline:</label><br>
+    <input type="date" name="deadline" required><br><br>
+
+    <label>Difficulty:</label><br>
+    <select name="difficulty">
+        <option>Easy</option>
+        <option>Medium</option>
+        <option>Hard</option>
+    </select><br><br>
+
+    <label>Importance:</label><br>
+    <select name="importance">
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+    </select><br><br>
+
+    <button type="submit">Add Task</button>
+</form>
+
+<!-- 🔔 ALERTS -->
+<h2>Alerts & Reminders</h2>
+
+{% if alerts %}
+<ul>
+    {% for alert in alerts %}
+        <li style="color: red; font-weight: bold;">
+            {{ alert }}
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No alerts 🎉</p>
+{% endif %}
+
+<h2>Task List</h2>
+
+<table border="1">
+<tr>
+    <th>Sno</th>
+    <th>Title</th>
+    <th>Deadline</th>
+    <th>Importance</th>
+    <th>Difficulty</th>
+    <th>Priority</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+
+{% for task in tasks %}
+<tr>
+    <!-- Serial Number -->
+    <td>{{ loop.index }}</td>
+
+    <!-- Data -->
+    <td>{{ task[1] }}</td>  <!-- title -->
+    <td>{{ task[2] }}</td>  <!-- deadline -->
+    <td>{{ task[4] }}</td>  <!-- importance -->
+    <td>{{ task[3] }}</td>  <!-- difficulty -->
+
+    <!-- Priority with colors -->
+    <td style="
+        color:
+        {% if task[5]=='High' %}red
+        {% elif task[5]=='Medium' %}orange
+        {% else %}green
+        {% endif %}
+    ">
+        {{ task[5] }}
+    </td>
+
+    <!-- Status -->
+    <td>{{ task[6] }}</td>
+
+    <!-- Actions -->
+    <td>
+        <!-- ✔ COMPLETE -->
+        <a href="/complete/{{ task[0] }}" title="Mark Completed" style="text-decoration:none;">
+            ✔
+        </a>
+
+        &nbsp;&nbsp;
+
+        <!-- 🗑 DELETE -->
+        <a href="/delete/{{ task[0] }}" title="Delete Task" style="text-decoration:none;">
+            🗑
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
