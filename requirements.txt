@@ -2,3 +2,4 @@ Flask
 flask-mysqldb
 werkzeug
 apscheduler
+pymysql
