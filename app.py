@@ -15,11 +15,12 @@ app.secret_key = "secret123"
 users = []
 
 # ---------------- MYSQL CONFIG ----------------
-app.config['MYSQL_HOST'] = 'mysql.railway.internal'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'FvwGDXhvYMvFKwnzzahdnFTgrcYGLyHk'
-app.config['MYSQL_DB'] = 'railway'
-app.config['MYSQL_PORT'] = 3306
+import os
+app.config['MYSQL_HOST'] = os.environ.get('MYSQLHOST')
+app.config['MYSQL_USER'] = os.environ.get('MYSQLUSER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQLPASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('MYSQLDATABASE')
+app.config['MYSQL_PORT'] = int(os.environ.get('MYSQLPORT'))
 
 mysql = MySQL(app)
 
