@@ -9,7 +9,6 @@ from datetime import datetime, date, timedelta
 from flask import session
 import random
 import time
-import os
 app = Flask(__name__)
 app.secret_key = "secret123"
 
@@ -408,7 +407,10 @@ def check_deadlines():
             mysql.connection.commit()
 
 # ---------------- RUN APP ----------------
+import os
 if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
     scheduler = BackgroundScheduler(daemon=True)
 
     if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
