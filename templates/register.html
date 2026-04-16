@@ -277,7 +277,7 @@ function checkMatch() {
 
 /* SUCCESS POPUP */
 window.onload = function() {
-    let success = {{ session.get('register_success', False) | tojson }};
+    let success = {{session.get('register_success', False) | tojson }};
 
     if (success) {
         document.getElementById("successPopup").style.display = "block";
