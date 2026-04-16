@@ -145,7 +145,7 @@ def login():
 def logout():
     return redirect('/login')
 
-@app.route('/')
+@app.route('/home')
 def home():
     return redirect('/login')
 
