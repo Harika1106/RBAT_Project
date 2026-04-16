@@ -123,17 +123,18 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        cur.execute("SELECT * FROM users WHERE email=%s", (email,))
+        cur.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
 
         if user:
-            if check_password_hash(user[2], password):
-                session['user_id'] = user[0]
-                return redirect('/dashboard')
+            stored_password = user[3]   # password column
+
+            if check_password_hash(stored_password, password):
+                return redirect("/dashboard")
             else:
-                return render_template('login.html', error="Wrong password!")
+                return "Wrong password"
         else:
-            return render_template('login.html', error="User not found!")
+            return "User not found"
 
     return render_template('login.html')
 
