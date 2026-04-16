@@ -374,7 +374,7 @@ def check_deadlines():
 
         cur.execute("""
             SELECT tasks.id, tasks.title, tasks.deadline,
-                   users.email, users.FullName,
+                   users.email, users.fullname,
                    tasks.last_remainder, tasks.status
             FROM tasks
             JOIN users ON tasks.user_id = users.id
