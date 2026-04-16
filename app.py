@@ -430,8 +430,8 @@ if __name__ == '__main__':
     #scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
     # testing:
     #scheduler.add_job(check_deadlines, 'interval', minutes=1)
-    
-    scheduler.add_job(check_deadlines, 'interval', hours=12)
+    #scheduler.add_job(check_deadlines, 'interval', hours=12)
+    scheduler.add_job(check_deadlines, 'interval', hours=12, next_run_time=datetime.now())
     scheduler.start()
     print("✅ Scheduler started")
 
