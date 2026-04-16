@@ -128,8 +128,10 @@ def login():
 
         if user:
             stored_password = user[0]  # password column
-
+            if isinstance(stored_password, bytes):
+                stored_password = stored_password.decode('utf-8')
             if check_password_hash(stored_password, password):
+                session['user_id'] = user_id
                 return redirect('/dashboard')
             else:
                 return render_template('login.html', error="Wrong password!")
