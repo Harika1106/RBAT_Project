@@ -395,7 +395,7 @@ def check_deadlines():
                 continue
 
             # ✅ once per day
-            #if last_remainder is not None and last_remainder == today:
+            if last_remainder is not None and last_remainder == today:
                 continue
 
             deadline = datetime.strptime(str(deadline), "%Y-%m-%d").date()
