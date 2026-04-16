@@ -127,14 +127,13 @@ def login():
         user = cur.fetchone()
 
         if user:
-            stored_password = user[0]
+            stored_password = user[2]   # ✅ correct index
 
-            # 🔥 IMPORTANT FIX
             if isinstance(stored_password, bytes):
                 stored_password = stored_password.decode('utf-8')
 
             if check_password_hash(stored_password, password):
-
+                session['user_id'] = email   # ✅ 👉 IKADA PETTALI
                 return redirect('/dashboard')
             else:
                 return render_template('login.html', error="Wrong password!")
