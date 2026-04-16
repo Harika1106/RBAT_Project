@@ -123,7 +123,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        cur.execute("SELECT id,password FROM users WHERE email=%s", (email,))
+        cur.execute("SELECT fullname,email,password FROM users WHERE email=%s", (email,))
         user = cur.fetchone()
 
         if user:
