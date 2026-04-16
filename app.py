@@ -361,7 +361,7 @@ def add_task():
         INSERT INTO tasks(title, deadline, difficulty, importance, priority, status, user_id, last_remainder)
         VALUES (%s, %s, %s, %s, %s, 'Pending', %s, NULL)
     """, (title, deadline, difficulty, importance, priority, session['user_id']))
-
+    
     mysql.connection.commit()
 
     return redirect('/dashboard')
@@ -426,9 +426,9 @@ if __name__ == '__main__':
     # 🔥 START SCHEDULER FIRST
     scheduler = BackgroundScheduler(daemon=True)
 
-    scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
+    #scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
     # testing:
-    # scheduler.add_job(check_deadlines, 'interval', minutes=1)
+    scheduler.add_job(check_deadlines, 'interval', minutes=1)
 
     scheduler.start()
     print("✅ Scheduler started")
