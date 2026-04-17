@@ -31,3 +31,38 @@ th {
     background: #3498db;
     color: white;
 }
+/* HEADER ALIGNMENT FIX */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-box {
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+.logout {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}

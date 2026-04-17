@@ -6,6 +6,7 @@
 
     <!-- ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <style>
 /* ===== BODY ===== */
@@ -226,9 +227,9 @@ tr:hover {
 
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);  /* 🔥 EXACT CENTER */
+    transform: translate(-50%, -50%);  
 
-    width: 420px;          /* 🔥 BIGGER SIZE */
+    width: 420px;          
     max-width: 90%;
 
     background: white;
@@ -238,8 +239,7 @@ tr:hover {
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     z-index: 1000;
 
-    text-align: center;   /* 🔥 CENTER CONTENT */
-}
+    text-align: center;   
 
 .popup button {
     margin-top: 15px;
@@ -252,7 +252,7 @@ tr:hover {
 
     display: block;
     margin-left: auto;
-    margin-right: auto;   /* 🔥 CENTER BUTTON */
+    margin-right: auto;   
 }
 
 /* BACKGROUND DARK EFFECT */
@@ -409,7 +409,7 @@ tr:hover {
 
 /* 📊 Container */
 .chart-container {
-    position: relative;  /* 🔥 IMPORTANT */
+    position: relative;  
     cursor: pointer;
 }
 
@@ -418,8 +418,8 @@ tr:hover {
     display: none;
     position: absolute;
 
-    top: 40px;   /* below icon */
-    right: 0;    /* align to icon right */
+    top: 40px;   
+    right: 0;    
 
     background: white;
     padding: 15px 20px;
@@ -501,7 +501,7 @@ body {
     color: white;
 }
 
-/* DARK MODE TABLE FIX */
+
 /* DARK MODE TABLE FIX */
 body.dark table {
     background: #1e1e1e;
@@ -532,7 +532,7 @@ body.dark select {
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 380px;   /* 🔥 increased size */
+    width: 380px;   
     padding: 30px;
 
     border-radius: 15px;
@@ -833,7 +833,7 @@ body.dark .task-form {
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ task[1] }}</td>
-            <td>{{ task[2] }}</td>
+            <td>{{ task[2].strftime('%d-%m-%Y') }}</td>
             <td>{{ task[3] }}</td>
             <td>{{ task[4] }}</td>
             <td>
@@ -846,18 +846,26 @@ body.dark .task-form {
             low
         {% endif %}
     ">
-        {{ task[5] }}
+        <td>
+    {% if task[5] == 'High' %}
+        <span style="color:red;">High</span>
+    {% elif task[5] == 'Medium' %}
+        <span style="color:orange;">Medium</span>
+    {% else %}
+        <span style="color:green;">Low</span>
+    {% endif %}
+</td>
     </span>
 </td>
 
             <!-- ✅ STATUS -->
             <td>
-                {% if task[6] == 'Completed' %}
-                    <span class="status completed">Completed</span>
-                {% else %}
-                    <span class="status pending">Pending</span>
-                {% endif %}
-            </td>
+    {% if task[6] == 'Completed' %}
+        <span style="background:#6EE7B7; padding:5px 10px; border-radius:10px;">Completed</span>
+    {% else %}
+        <span style="background:#FDE68A; padding:5px 10px; border-radius:10px;">Pending</span>
+    {% endif %}
+</td>
 
             <!-- ✅ ACTIONS -->
             <td>
@@ -882,6 +890,7 @@ function toggleStats() {
         popup.style.display = "none";
     } else {
         popup.style.display = "block";
+
     }
 }
 function openNotification() {
