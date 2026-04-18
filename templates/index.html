@@ -75,15 +75,17 @@
     <td>{{ task[3] }}</td>  <!-- difficulty -->
 
     <!-- Priority with colors -->
-    <td style="
-        color:
-        {% if task[5]=='High' %}red
-        {% elif task[5]=='Medium' %}orange
-        {% else %}green
-        {% endif %}
-    ">
-        {{ task[5] }}
-    </td>
+    <td 
+    {% if task[5]=='High' %}
+        style="color:red;"
+    {% elif task[5]=='Medium' %}
+        style="color:orange;"
+    {% else %}
+        style="color:green;"
+    {% endif %}
+>
+    {{ task[5] }}
+</td>
 
     <!-- Status -->
     <td>{{ task[6] }}</td>

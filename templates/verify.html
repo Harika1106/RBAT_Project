@@ -14,69 +14,18 @@ body {
     font-family: Arial;
 }
 
-.box {
-    background:white;
-    padding:40px;
-    border-radius:12px;
-    width:400px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
-
-h2 {
-    font-family:"Times New Roman";
-}
-
-input {
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border-radius:8px;
-    border:1px solid #ccc;
-}
-
-button {
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    background: linear-gradient(90deg,#667eea,#764ba2);
-    color:white;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.timer {
-    margin-top:10px;
-    font-size:14px;
-    color:gray;
-}
-
-.resend {
-    margin-top:10px;
-    display:none;
-}
-
-.resend a {
-    color:#667eea;
-    cursor:pointer;
-    text-decoration:none;
-}
-
 .auth-box {
     width: 420px;
     padding: 35px;
     background: white;
     border-radius: 15px;
     text-align: center;
-    margin: auto;
-    margin-top: 100px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .auth-box h2 {
     margin-bottom: 25px;
+    font-family:"Times New Roman";
 }
 
 .auth-box input {
@@ -96,13 +45,15 @@ button {
     color: white;
     font-weight: bold;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
-.resend {
+#resendBtn {
     display: block;
     margin-bottom: 10px;
     color: blue;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .timer {
@@ -110,65 +61,30 @@ button {
     color: gray;
 }
 
+/* POPUP */
 .popup {
     display: none;
     position: fixed;
-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
-    width: 350px;              /* bigger width */
-    padding: 30px 25px;
-
+    width: 350px;
+    padding: 30px;
     border-radius: 15px;
-    background: linear-gradient(135deg, #ffffff, #f5f5f5);
-
+    background: white;
     text-align: center;
-
     box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    z-index: 1000;
 }
 
-/* message */
-.popup p {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 20px;
-}
-
-/* button */
 .popup button {
     padding: 10px 30px;
     border: none;
     border-radius: 8px;
-
     background: linear-gradient(90deg, #667eea, #764ba2);
     color: white;
-
     font-weight: bold;
     cursor: pointer;
 }
-
-/* hover */
-.popup button:hover {
-    transform: scale(1.05);
-}
-
-.overlay {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(3px);
-
-    z-index: 999;
-}
-
 </style>
 </head>
 
@@ -182,71 +98,66 @@ button {
 
         <button type="submit">Verify</button>
 
-        <a href="/resend" class="resend">Resend OTP</a>
-
-        <p class="timer">Resend OTP in 58s</p>
+        <!-- RESEND -->
+        <a id="resendBtn">Resend OTP</a>
+        <p class="timer">Resend OTP in <span id="timer">60</span>s</p>
     </form>
 </div>
 
-<!-- POPUP -->
-<div id="otpPopup" class="popup">
-    <p>Invalid OTP ❌</p>
-    <button onclick="closePopup()">OK</button>
-</div>
-
+<!-- SINGLE POPUP -->
 <div id="otpPopup" class="popup">
     <p id="popupMsg"></p>
     <button onclick="closePopup()">OK</button>
 </div>
 
 <script>
-let time = 60;
-let timer = document.getElementById("timer");
-let resend = document.getElementById("resend");
 
-let countdown = setInterval(() => {
-    time--;
-    if(timer){
-        timer.innerHTML = "Resend OTP in " + time + "s";
+/* ===== RUN AFTER PAGE LOAD ===== */
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ===== TIMER + DISABLE ===== */
+    let time = 60;
+    let btn = document.getElementById("resendBtn");
+
+    if (btn) {
+        btn.style.pointerEvents = "none";
+        btn.style.opacity = "0.5";
     }
 
-    if(time <= 0){
-        clearInterval(countdown);
-        if(timer) timer.style.display = "none";
-        if(resend) resend.style.display = "block";
-    }
-}, 1000);
+    let interval = setInterval(function () {
+        time--;
+        document.getElementById("timer").innerText = time;
 
-/* ✅ SINGLE popup function only */
+        if (time <= 0) {
+            clearInterval(interval);
+            btn.style.pointerEvents = "auto";
+            btn.style.opacity = "1";
+        }
+    }, 1000);
+
+    /* ===== BACKEND TRIGGER (SAFE) ===== */
+    let error = "{{ error }}";
+
+    if (error === "invalid") {
+        showPopup("Invalid OTP ❌");
+    } 
+    else if (error === "expired") {
+        showPopup("OTP Expired ⏰");
+    }
+
+});
+
+/* ===== POPUP ===== */
 function showPopup(msg) {
     document.getElementById("popupMsg").innerText = msg;
     document.getElementById("otpPopup").style.display = "block";
-
-    let overlay = document.getElementById("overlay");
-    if(overlay){
-        overlay.style.display = "block";
-    }
 }
 
 function closePopup() {
     document.getElementById("otpPopup").style.display = "none";
-
-    let overlay = document.getElementById("overlay");
-    if(overlay){
-        overlay.style.display = "none";
-    }
 }
+
 </script>
 
-<!-- ✅ THIS MUST BE AFTER SCRIPT -->
-{% if error == "invalid" %}
-<script>
-    showPopup("Invalid OTP ❌");
-</script>
-{% elif error == "expired" %}
-<script>
-    showPopup("OTP Expired ⏰");
-</script>
-{% endif %}
 </body>
 </html>

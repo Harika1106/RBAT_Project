@@ -40,110 +40,7 @@ h2 {
     margin-bottom:25px;
 }
 
-/* INPUT GROUP */
-.input-group {
-    position:relative;
-    margin-bottom:20px;
-}
-
-.input-group input {
-    width:100%;
-    padding:12px 45px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    outline:none;
-    box-sizing:border-box;
-}
-
-/* ICONS */
-.left-icon {
-    position:absolute;
-    left:12px;
-    top:50%;
-    transform:translateY(-50%);
-    color:gray;
-}
-
-.eye {
-    position:absolute;
-    right:12px;
-    top:50%;
-    transform:translateY(-50%);
-    cursor:pointer;
-}
-
-/* FLOATING LABEL */
-label {
-    position:absolute;
-    left:40px;
-    top:12px;
-    color:gray;
-    transition:0.3s;
-    background:white;
-    padding:0 5px;
-}
-
-input:focus + label,
-input:valid + label {
-    top:-8px;
-    font-size:11px;
-    color:#667eea;
-}
-
-/* BUTTON */
-button {
-    width:100%;
-    padding:12px;
-    background: linear-gradient(90deg,#667eea,#764ba2);
-    color:white;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-/* STRENGTH BAR */
-#strengthBar {
-    height:6px;
-    width:100%;
-    border-radius:5px;
-    margin-top:5px;
-    background:#ddd;
-}
-
-#strengthText {
-    font-size:13px;
-    margin:5px 0;
-}
-
-.weak { color:red; }
-.medium { color:orange; }
-.strong { color:green; }
-
-.bar-weak { background:red; width:30%; }
-.bar-medium { background:orange; width:60%; }
-.bar-strong { background:green; width:100%; }
-
-/* MATCH TEXT */
-#matchText {
-    font-size:13px;
-    margin-top:5px;
-}
-
-/* POPUP */
-.popup {
-    display:none;
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    background:white;
-    padding:25px;
-    border-radius:10px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
-    text-align:center;
-}
-
+/* INPUT */
 .input-box {
     position: relative;
     margin-bottom: 20px;
@@ -163,7 +60,19 @@ button {
     cursor: pointer;
 }
 
-/* strength bar */
+/* BUTTON */
+button {
+    width:100%;
+    padding:12px;
+    background: linear-gradient(90deg,#667eea,#764ba2);
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* STRENGTH BAR */
 .strength {
     width: 100%;
     height: 6px;
@@ -177,6 +86,30 @@ button {
     width: 0%;
     border-radius: 5px;
 }
+
+/* POPUP */
+.popup {
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    text-align:center;
+}
+
+.popup button {
+    margin-top:15px;
+    padding:10px 20px;
+    background:#667eea;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
 </style>
 </head>
 
@@ -187,7 +120,6 @@ Academic Task Prioritization & Deadline Management System
 </div>
 
 <div class="box">
-
 <div class="auth-box">
     <h2>Set New Password</h2>
 
@@ -199,12 +131,12 @@ Academic Task Prioritization & Deadline Management System
             <span onclick="togglePass('newPass')">👁️</span>
         </div>
 
-        <!-- STRENGTH BAR -->
+        <!-- STRENGTH -->
         <div class="strength">
             <div id="strengthBar"></div>
         </div>
 
-        <!-- CONFIRM PASSWORD -->
+        <!-- CONFIRM -->
         <div class="input-box">
             <input type="password" id="confirmPass" name="confirm" placeholder="Confirm Password" required>
             <span onclick="togglePass('confirmPass')">👁️</span>
@@ -215,94 +147,66 @@ Academic Task Prioritization & Deadline Management System
 </div>
 </div>
 
-<!-- SUCCESS POPUP -->
-<div id="popup" class="popup">
-    <h3>✅ Password Updated</h3>
-    <p>Redirecting to login...</p>
+<!-- ✅ SUCCESS POPUP -->
+<div id="successPopup" class="popup">
+    <h3 style="color:black;">✔ Password Changed Successfully</h3>
+    <button onclick="goLogin()">Done</button>
 </div>
 
 <script>
-function togglePassword(id){
-    let f = document.getElementById(id);
-    f.type = f.type === "password" ? "text" : "password";
-}
 
-/* PASSWORD STRENGTH */
-function checkStrength(){
-    let p = document.getElementById("password").value;
-    let bar = document.getElementById("strengthBar");
-    let text = document.getElementById("strengthText");
-
-    let strength = 0;
-
-    if(p.length >= 6) strength++;
-    if(/[A-Z]/.test(p)) strength++;
-    if(/[0-9]/.test(p)) strength++;
-    if(/[@$!%*?&]/.test(p)) strength++;
-
-    if(strength <=1){
-        bar.className="bar-weak";
-        text.innerHTML="Weak password";
-        text.className="weak";
-    }
-    else if(strength <=3){
-        bar.className="bar-medium";
-        text.innerHTML="Medium strength";
-        text.className="medium";
-    }
-    else{
-        bar.className="bar-strong";
-        text.innerHTML="Strong password";
-        text.className="strong";
-    }
-}
-
-/* MATCH CHECK */
-function checkMatch(){
-    let p = document.getElementById("password").value;
-    let c = document.getElementById("confirm_password").value;
-    let msg = document.getElementById("matchText");
-
-    if(c==="") return;
-
-    if(p===c){
-        msg.innerHTML="✔ Passwords match";
-        msg.style.color="green";
-    } else {
-        msg.innerHTML="❌ Passwords do not match";
-        msg.style.color="red";
-    }
-}
-
+/* TOGGLE */
 function togglePass(id) {
     let input = document.getElementById(id);
     input.type = input.type === "password" ? "text" : "password";
 }
 
-document.getElementById("newPass").addEventListener("input", function() {
-    let val = this.value;
-    let bar = document.getElementById("strengthBar");
+/* RUN AFTER PAGE LOAD */
+document.addEventListener("DOMContentLoaded", function () {
 
-    if (val.length < 4) {
-        bar.style.width = "30%";
-        bar.style.background = "red";
-    } else if (val.length < 8) {
-        bar.style.width = "60%";
-        bar.style.background = "orange";
-    } else {
-        bar.style.width = "100%";
-        bar.style.background = "green";
+    /* STRENGTH */
+    let newPass = document.getElementById("newPass");
+
+    if (newPass) {
+        newPass.addEventListener("input", function () {
+            let val = this.value;
+            let bar = document.getElementById("strengthBar");
+
+            if (val.length < 4) {
+                bar.style.width = "30%";
+                bar.style.background = "red";
+            } else if (val.length < 8) {
+                bar.style.width = "60%";
+                bar.style.background = "orange";
+            } else {
+                bar.style.width = "100%";
+                bar.style.background = "green";
+            }
+        });
     }
+
+    /* SUCCESS CHECK */
+    let success = "{{ success }}";
+
+    if (success === "True") {
+        showSuccess();
+
+        setTimeout(function () {
+            window.location.href = "/";
+        }, 2000);
+    }
+
 });
 
 /* POPUP */
-{% if success %}
-    document.getElementById("popup").style.display="block";
-    setTimeout(()=>{
-        window.location.href="/";
-    },2000);
-{% endif %}
-</script>
+function showSuccess() {
+    document.getElementById("successPopup").style.display = "block";
+}
 
+function goLogin() {
+    window.location.href = "/";
+}
+
+</script>
 </body>
 </html>

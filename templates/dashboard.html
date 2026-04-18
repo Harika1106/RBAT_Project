@@ -1,924 +1,379 @@
 <!DOCTYPE html>
 <html>
 <head>
-    </body>
-    <title>Dashboard</title>
+<title>Dashboard</title>
 
-    <!-- ICONS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* ===== BODY ===== */
-body {
-    margin: 0;
-    font-family: "Times New Roman", serif;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+
+/* BODY */
+body{
+    margin:0;
+    font-family:"Times New Roman";
+    background:#eef2ff;
 }
 
-/* HEADINGS */
-h1, h2, h3, th {
-    font-weight: bold;
+/* HEADER */
+.header{
+    background:linear-gradient(90deg,#667eea,#764ba2);
+    color:white;
+    padding:25px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-/* TABLE TEXT */
-td {
-    font-weight: normal;
-    font-family: "Times New Roman", serif;
+.top-icons{
+    display:flex;
+    align-items:center;
+    gap:22px;
 }
 
-th {
-    font-size: 16px;
-    letter-spacing: 1px;
+.icon-box{
+    position:relative;
+    font-size:22px;
+    cursor:pointer;
 }
 
-td {
-    font-size: 15px;
-} 
+.icon-box i.fa-bell{color:gold;}
 
-/* ===== HEADER ===== */
-.header {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    color: white;
-
-    padding: 25px 40px;   /* 🔥 increased */
-    
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+.badge{
+    position:absolute;
+    top:-6px;
+    right:-8px;
+    background:red;
+    color:white;
+    font-size:11px;
+    padding:2px 6px;
+    border-radius:50%;
 }
 
-/* title size also improve */
-.header h2 {
-    font-size: 24px;   /* 🔥 bigger */
+.logout{
+    color:white;
+    text-decoration:none;
+    font-size:18px;
 }
 
-/* ===== ICONS ===== */
-.header-icons {
-    display: flex;
-    align-items: center;
-    gap: 25px;
+/* FORM BOX */
+.form-box{
+    width:95%;
+    margin:25px auto;
+    padding:20px;
+    border-radius:15px;
+    background:#f3f4f6;
 }
 
-.bell {
-    font-size: 22px;
-    color: yellow;
-    position: relative;
-    cursor: pointer;
-}
-
-.count {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: red;
-    color: white;
-    font-size: 11px;
-    padding: 3px 6px;
-    border-radius: 50%;
-}
-
-/* ===== DARK MODE ===== */
-#darkIcon {
-    font-size: 22px;
-    cursor: pointer;
-}
-
-/* ===== FORM ===== */
-.form-box {
-    margin: 30px auto;
-    padding: 30px;   /* 🔥 more space */
-
-    width: 95%;
-    border-radius: 16px;
-
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(10px);
-
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
+/* FORM ROW */
 .form-row {
     display: flex;
-    gap: 25px;   /* 🔥 more gap */
     align-items: center;
+    gap: 20px;
+    justify-content: space-between;
 }
 
-/* ===== INPUT GROUP ===== */
+/* INPUT GROUP */
 .input-group {
     position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 220px;
 }
 
+/* FLOAT LABEL */
+.input-group label{
+    position:absolute;
+    top:-10px;
+    left:12px;
+    background:#eef2ff;
+    padding:0 5px;
+    font-size:12px;
+    color:#6c63ff;
+}
+
+/* INPUT + SELECT */
 .input-group input,
 .input-group select {
-    padding: 14px 40px;   /* 🔥 bigger */
-    width: 200px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    background: white;
-    transition: 0.3s;
+    width: 100%;
+    height: 45px;
+    padding: 10px 12px 10px 40px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
-.input-group input:focus,
-.input-group select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 5px rgba(102,126,234,0.3);
-}
-
+/* ICON INSIDE BOX */
 .input-group i {
     position: absolute;
-    left: 10px;
-    top: 12px;
-    color: #666;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
 }
-
-.input-group label {
-    position: absolute;
-    left: 35px;
-    top: 12px;
-    color: gray;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-/* FLOAT */
-.input-group input:focus + label,
-.input-group input:valid + label,
-.input-group select:focus + label,
-.input-group select:valid + label {
-    top: -8px;
-    font-size: 12px;
-    color: #667eea;
-    background: white;
-    padding: 0 4px;
-}
-
 /* BUTTON */
 .add-btn {
-    padding: 10px 22px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 45px;
+    padding: 0 20px;
+    border-radius: 10px;
+    background: linear-gradient(90deg,#667eea,#764ba2);
     color: white;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
 }
 
-.add-btn:hover {
-    transform: scale(1.05);
+/* TABLE */
+table{
+    width:95%;
+    margin:30px auto;
+    border-collapse:collapse;
 }
 
-/* ===== TABLE ===== */
-table {
-    width: 95%;
-    margin: 30px auto;
-    border-collapse: collapse;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+th{
+    background:linear-gradient(90deg,#667eea,#764ba2);
+    color:white;
+    padding:12px;
 }
 
-th {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    color: white;
-    padding: 14px;
-    font-size: 14px;
+td{
+    padding:12px;
+    text-align:center;
 }
 
-td {
-    padding: 12px;
-    text-align: center;
+tr{background:white;}
+
+.high{color:red;font-weight:bold;}
+.medium{color:orange;}
+.low{color:green;}
+
+.status{
+    padding:5px 12px;
+    border-radius:20px;
 }
 
-tr {
-    background: white;
+.status.pending{background:#ffeaa7;}
+.status.completed{background:#55efc4;}
+
+.actions a{
+    font-size:22px;
+    margin:0 12px;
+    text-decoration:none;
 }
 
-tr:hover {
-    background: #f1f5ff;
-}
+.actions a.complete{color:green;}
+.actions a.delete{color:red;}
 
-/* PRIORITY COLORS */
-.high { color: red; font-weight: bold; }
-.medium { color: orange; }
-.low { color: green; }
-
-/* ACTION ICONS */
-.action-icons i {
-    font-size: 20px;
-    margin: 0 10px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.action-icons i:hover {
-    transform: scale(1.2);
-}
-
-/* ===== POPUP ===== */
-/* 🔔 PERFECT CENTER POPUP */
+/* POPUP */
 .popup {
     display: none;
     position: fixed;
-
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);  
-
-    width: 420px;          
-    max-width: 90%;
-
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    z-index: 1000;
-
-    text-align: center;   
-
-.popup button {
-    margin-top: 15px;
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-
-    display: block;
-    margin-left: auto;
-    margin-right: auto;   
+    transform: translate(-50%, -50%);
+    width: 420px;
+    padding: 30px;
+    background: #f2f2f2;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 1000;   
 }
 
-/* BACKGROUND DARK EFFECT */
+.popup button{
+    margin-top:15px;
+    padding:10px 22px;
+    background:linear-gradient(90deg,#667eea,#764ba2);
+    color:white;
+    border:none;
+    border-radius:8px;
+}
+
+/* OVERLAY */
 .overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-
-    background: rgba(0,0,0,0.4);
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
     z-index: 999;
 }
 
-/* ===== DARK MODE ===== */
-.dark {
-    background: #121212;
-    color: white;
-}
-
-.dark table {
-    background: #1e1e1e;
-}
-
-.dark .form-box {
-    background: rgba(30,30,30,0.8);
-}
-/* FIX DATE FIELD LABEL OVERLAP */
-.input-group input[type="date"] {
-    padding-right: 10px;
-}
-
-/* Always float label for date field */
-.input-group input[type="date"] + label {
-    top: -8px;
-    left: 30px;
-    font-size: 12px;
-    color: #667eea;
-    background: white;
-    padding: 0 4px;
-}
-
-/* Hide default placeholder look */
-.input-group input[type="date"]:invalid {
-    color: gray;
-}
-
-.stats-container {
-    display: flex;
-    gap: 20px;
-    margin: 20px;
-}
-
-.card {
-    flex: 1;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.priority-High {
-    color: red;
-    font-weight: bold;
-}
-
-.priority-Medium {
-    color: orange;
-}
-
-.priority-Low {
-    color: green;
-}
-
-.status {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 13px;
-}
-
-.Pending {
-    background: #ffeaa7;
-}
-
-.Completed {
-    background: #55efc4;
-}
-
-.notification {
-    position: relative;
-    cursor: pointer;
-}
-
-.dropdown {
-    display: none;
-    position: absolute;
-    background: white;
-    right: 0;
-    top: 30px;
-    width: 200px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    padding: 10px;
-}
-
-.notification:hover .dropdown {
-    display: block;
-}
-
-.status {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-}
-
-.completed {
-    background: #55efc4;
-}
-
-.pending {
-    background: #ffeaa7;
-}
-
-.chart-box {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    margin-left: 15px;
-}
-
-.chart-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 30px;
-    background: white;
-    width: 200px;
-    padding: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    border-radius: 10px;
-}
-
-.chart-box:hover .chart-dropdown {
-    display: block;
-}
-
-.top-icons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* 📊 Container */
-.chart-container {
-    position: relative;  
-    cursor: pointer;
-}
-
-/* 📊 Popup box */
-.stats-popup {
-    display: none;
-    position: absolute;
-
-    top: 40px;   
-    right: 0;    
-
-    background: white;
-    padding: 15px 20px;
-    border-radius: 10px;
-
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-
-    width: 200px;
-    text-align: left;
-
-    z-index: 1000;
-}
-
-body {
-    font-family: "Times New Roman", serif;
-}
-
-/* ICONS */
-.top-icons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.icon-box {
-    position: relative;
-    font-size: 20px;
-    cursor: pointer;
-    color: white;
-}
-
-/* 🔔 COUNT BADGE */
-.badge {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: red;
-    color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 50%;
-}
-
-/* LOGOUT */
-.logout {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* POPUP CENTER */
-.popup {
-    display: none;
-    position: fixed;
-
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-
-    width: 300px;
-    text-align: center;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    z-index: 1000;
-}
-
-/* DARK MODE */
-.dark {
-    background: #1e1e1e;
-    color: white;
-}
-
-.dark .popup {
-    background: #2c2c2c;
-    color: white;
-}
-
-
-/* DARK MODE TABLE FIX */
-body.dark table {
-    background: #1e1e1e;
-    color: white;
-}
-
-body.dark th {
-    color: white;
-}
-
-body.dark td {
-    color: white;
-}
-
-/* input fields also visible */
-body.dark input,
-body.dark select {
-    background: #2a2a2a;
-    color: white;
-    border: 1px solid #555;
-}
-
-.popup {
-    display: none;
-    position: fixed;
-
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 380px;   
-    padding: 30px;
-
-    border-radius: 15px;
-
-    background: linear-gradient(135deg, #ffffff, #f3f3f3);
-    text-align: center;
-
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-
-    z-index: 1000;
-}
-
-/* DARK MODE POPUP */
-.dark .popup {
-    background: linear-gradient(135deg, #2c2c2c, #1e1e1e);
-    color: white;
-}
-
-/* bell */
-.icon-box:nth-child(1) {
-    color: gold;
-}
-
-/* chart */
-.icon-box:nth-child(2) {
-    color: lightgreen;
-}
-
-/* dark icon */
-.icon-box:nth-child(3) {
-    color: white;
-}
-
-/* 🌙 DARK MODE FULL TABLE FIX */
-body.dark table {
-    background-color: #1e1e1e !important;
-    color: #ffffff !important;
-}
-
-body.dark thead {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-}
-
-body.dark th {
-    color: #ffffff !important;
-}
-
-body.dark td {
-    color: #ffffff !important;
-    background-color: #2a2a2a !important;
-}
-
-/* rows alternate */
-body.dark tr:nth-child(even) td {
-    background-color: #242424 !important;
-}
-
-/* borders */
-body.dark table,
-body.dark th,
-body.dark td {
-    border-color: #444 !important;
-}
-
-body.dark .task-form {
-    background: #1e1e1e;
-}
-
-body.dark input,
-body.dark select {
-    background: #2a2a2a;
-    color: white;
-    border: 1px solid #555;
-}
-
-/* 🌞 LIGHT MODE BEAUTY */
-body {
-    background: linear-gradient(135deg, #eef2ff, #f8f9ff);
-}
-
-/* table */
-table {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
-/* rows */
-tr:hover td {
-    background: #f1f5ff;
-    transition: 0.3s;
-}
-
-/* 🌙 DARK MODE PREMIUM UI */
 body.dark {
-    background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+    background: #1e1e2f;
+    color: white;
 }
 
-/* table container */
-body.dark table {
-    background: rgba(30, 30, 40, 0.8);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    overflow: hidden;
+body.dark .form-box {
+    background: #2c2c3e;
 }
 
-/* rows */
-body.dark td {
-    background: transparent;
-    color: #f1f1f1;
+body.dark table tr {
+    background: #2c2c3e;
+    color: white;
 }
 
-/* hover effect */
-body.dark tr:hover td {
-    background: rgba(255,255,255,0.05);
+body.dark input,
+body.dark select {
+    background: #3a3a55;
+    color: white;
+    border: 1px solid #555;
 }
 
-.navbar {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+body.dark .header {
+    background: linear-gradient(90deg,#3a3a55,#1e1e2f);
 }
 
-.status {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: bold;
-}
 
-/* pending */
-.status.pending {
-    background: #ffeaa7;
-    color: #6b5e00;
-}
 
-/* completed */
-.status.completed {
-    background: #55efc4;
-    color: #065f46;
-}
-
-/* dark mode adjust */
-body.dark .status.pending {
-    background: #3a3200;
-    color: #ffd700;
-}
-
-body.dark .status.completed {
-    background: #0f3d2e;
-    color: #00ffb3;
-}
-
-.task-form {
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-}
-
-/* dark mode */
-body.dark .task-form {
-    background: rgba(30,30,40,0.7);
-}
-
-.icon-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-}
 </style>
+</head>
 
-<!-- OVERLAY -->
+<body>
+
 <div id="overlay" class="overlay"></div>
 
-<!-- POPUP -->
-<!-- 🔔 NOTIFICATION POPUP -->
+<!-- POPUPS -->
 <div id="notificationPopup" class="popup">
-
-    <h3>🔔NOTIFICATIONS</h3>
-
+    <h3>Notifications</h3>
     {% for n in notifications %}
-        <p> {{ n }}</p>
+        <p>{{ n }}</p>
     {% endfor %}
-
     <button onclick="closeNotification()">Close</button>
-
 </div>
-<!-- 📊 STATS POPUP -->
+
 <div id="statsPopup" class="popup">
-    <h3>TASK SUMMARY</h3>
-    <p>📊 Total Tasks: {{ total }}</p>
-    <p>✅ Completed: {{ completed }}</p>
-    <p>⏳ Pending: {{ pending }}</p>
+    <h3>Task Summary</h3>
+    <p>📊Total: {{ total }}</p>
+    <p>✅Completed: {{ completed }}</p>
+    <p>⏳Pending: {{ pending }}</p>
     <button onclick="closeStats()">Close</button>
 </div>
 
+<!-- HEADER -->
 <div class="header">
     <h2>Student Academic Task Dashboard</h2>
 
     <div class="top-icons">
-
-        <!-- 🔔 Notification -->
         <div class="icon-box" onclick="openNotification()">
             <i class="fas fa-bell"></i>
             <span class="badge">{{ notifications|length }}</span>
         </div>
 
-        <!-- 📊 Stats -->
-        <div class="icon-box" onclick="openStats()">
-        📊
-        </div>
+        <div class="icon-box" onclick="openStats()">📊</div>
+        <div class="icon-box" onclick="toggleMode()">🌙</div>
 
-        <!-- 🌙 Dark Mode -->
-        <div class="icon-box" onclick="toggleMode()" id="modeIcon">
-            🌙
-        </div>
-
-        <!-- Logout -->
         <a href="/logout" class="logout">Logout</a>
-
     </div>
-</div> 
-
-<!-- ADD TASK -->
-<div class="form-box">
-    <form method="POST" action="/add">
-
-        <div class="form-row">
-
-            <!-- TITLE -->
-            <div class="input-group">
-                <i class="fa-solid fa-book"></i>
-                <input type="text" name="title" required>
-                <label>Task Title</label>
-            </div>
-
-            <!-- DEADLINE -->
-            <div class="input-group">
-                <i class="fa-solid fa-calendar"></i>
-                <input type="date" name="deadline" required>
-                <label>Deadline</label>
-            </div>
-
-            <!-- DIFFICULTY -->
-            <div class="input-group">
-                <i class="fa-solid fa-signal"></i>
-                <select name="difficulty" required>
-        
-                    <option disabled selected>Select</option>
-                    <option>Easy</option>
-                    <option>Medium</option>
-                    <option>Hard</option>
-                </select>
-                <label>Difficulty</label>
-            </div>
-
-            <!-- IMPORTANCE -->
-            <div class="input-group">
-                <i class="fa-solid fa-star"></i>
-                <select name="importance" required>
-                    
-                    <option disabled selected>Select</option>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
-                </select>
-                <label>Importance</label>
-            </div>
-
-            <button class="add-btn">Add Task</button>
-
-        </div>
-
-    </form>
 </div>
 
+<!-- FORM -->
+<div class="form-box">
+<form method="POST" action="/add">
 
+<div class="form-row">
+
+    <div class="input-group">
+        <i class="fas fa-book"></i>
+        <input type="text" name="title" required>
+        <label>Task Title</label>
+    </div>
+
+    <div class="input-group">
+        <i class="fas fa-calendar"></i>
+        <input type="date" name="deadline" required>
+        <label>Deadline</label>
+    </div>
+
+    <div class="input-group">
+        <i class="fas fa-chart-bar"></i>
+        <select name="difficulty">
+            <option>Select</option>
+            <option>Easy</option>
+            <option>Medium</option>
+            <option>Hard</option>
+        </select>
+        <label>Difficulty</label>
+    </div>
+
+    <div class="input-group">
+        <i class="fas fa-star"></i>
+        <select name="importance">
+            <option>Select</option>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+        </select>
+        <label>Importance</label>
+    </div>
+
+    <button class="add-btn">Add Task</button>
+
+</div>
+
+</form>
+</div>
 
 <!-- TABLE -->
-<div class="table-container">
 <table>
-    <thead>
-        <tr>
-            <th>Sno</th>
-            <th>Title</th>
-            <th>Deadline</th>
-            <th>Importance</th>
-            <th>Difficulty</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<tr>
+<th>Sno</th>
+<th>Title</th>
+<th>Deadline</th>
+<th>Importance</th>
+<th>Difficulty</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
 
-    <tbody>
-        {% for task in tasks %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ task[1] }}</td>
-            <td>{{ task[2].strftime('%d-%m-%Y') }}</td>
-            <td>{{ task[3] }}</td>
-            <td>{{ task[4] }}</td>
-            <td>
-    <span class="
-        {% if task[5]|trim == 'High' %}
-            high
-        {% elif task[5]|trim == 'Medium' %}
-            medium
-        {% elif task[5]|trim == 'Low' %}
-            low
-        {% endif %}
-    ">
-        <td>
-    {% if task[5] == 'High' %}
-        <span style="color:red;">High</span>
-    {% elif task[5] == 'Medium' %}
-        <span style="color:orange;">Medium</span>
-    {% else %}
-        <span style="color:green;">Low</span>
-    {% endif %}
-</td>
-    </span>
+{% for task in tasks %}
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ task[1] }}</td>
+<td>{{ task[2] }}</td>
+<td>{{ task[3] }}</td>
+<td>{{ task[4] }}</td>
+
+<td class="{{ task[5]|lower }}">{{ task[5] }}</td>
+
+<td>
+<span class="status {{ task[6]|lower }}">{{ task[6] }}</span>
 </td>
 
-            <!-- ✅ STATUS -->
-            <td>
-    {% if task[6] == 'Completed' %}
-        <span style="background:#6EE7B7; padding:5px 10px; border-radius:10px;">Completed</span>
-    {% else %}
-        <span style="background:#FDE68A; padding:5px 10px; border-radius:10px;">Pending</span>
-    {% endif %}
+<td class="actions">
+<a href="/complete/{{ task[0] }}" class="complete">✔</a>
+<a href="/delete/{{ task[0] }}" class="delete">🗑</a>
 </td>
+</tr>
+{% endfor %}
 
-            <!-- ✅ ACTIONS -->
-            <td>
-                <a href="/complete/{{ task[0] }}" style="color:green; font-weight:bold;">✔</a>
-                &nbsp;
-                <a href="/delete/{{ task[0] }}"onclick="color:red; font-weight:bold;">🗑️</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
 </table>
-</div>
 
 <script>
-function toggleDark() {
-    document.body.classList.toggle("dark");
-}
-function toggleStats() {
-    let popup = document.getElementById("statsPopup");
-
-    if (popup.style.display === "block") {
-        popup.style.display = "none";
-    } else {
-        popup.style.display = "block";
-
-    }
-}
-function openNotification() {
-    document.getElementById("notificationPopup").style.display = "block";
+function openNotification(){
+    document.activeElement.blur();   
+    overlay.style.display="block";
+    notificationPopup.style.display="block";
 }
 
-function closeNotification() {
-    document.getElementById("notificationPopup").style.display = "none";
+function closeNotification(){
+overlay.style.display="none";
+notificationPopup.style.display="none";
 }
-
-function openStats() {
-    document.getElementById("statsPopup").style.display = "block";
+function openStats(){
+    document.activeElement.blur();   
+    overlay.style.display="block";
+    statsPopup.style.display="block";
 }
-
-function closeStats() {
-    document.getElementById("statsPopup").style.display = "none";
+function closeStats(){
+overlay.style.display="none";
+statsPopup.style.display="none";
 }
-function toggleMode() {
-    document.body.classList.toggle("dark");
-
-    let icon = document.getElementById("modeIcon");
-
-    if (document.body.classList.contains("dark")) {
-        icon.innerHTML = "☀️";
-    } else {
-        icon.innerHTML = "🌙";
-    }
+function toggleMode(){
+document.body.classList.toggle("dark");
 }
 </script>
+
 </body>
 </html>

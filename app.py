@@ -1,33 +1,37 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 from apscheduler.schedulers.background import BackgroundScheduler
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime, date, timedelta
-from flask import session
+from datetime import datetime, date
 import random
 import time
-app = Flask(__name__)
-app.secret_key = "secret123"
-
-users = []
-
-# ---------------- MYSQL CONFIG ----------------
 import os
 from urllib.parse import urlparse
 
+app = Flask(__name__)
+app.secret_key = "secret123"
+
+users=[]
+
+# ---------------- MYSQL CONFIG ----------------
 url = os.environ.get("MYSQL_PUBLIC_URL")
 
 if url:
     parsed = urlparse(url)
-
     app.config['MYSQL_HOST'] = parsed.hostname
     app.config['MYSQL_USER'] = parsed.username
     app.config['MYSQL_PASSWORD'] = parsed.password
     app.config['MYSQL_DB'] = parsed.path[1:]
     app.config['MYSQL_PORT'] = parsed.port
+else:
+    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = 'Chotu@0223'
+    app.config['MYSQL_DB'] = 'task_manager'
+
 mysql = MySQL(app)
 
 # ---------------- EMAIL CONFIG ----------------
@@ -37,13 +41,6 @@ PASSWORD = "lkre btww kmmi bois"
 # ---------------- SEND EMAIL ----------------
 def send_email(to_email, name, title, status_text):
     try:
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
-
-        EMAIL = "harikavasamsetti2004@gmail.com"
-        PASSWORD = "lkre btww kmmi bois"
-
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(EMAIL, PASSWORD)
@@ -53,21 +50,14 @@ def send_email(to_email, name, title, status_text):
         msg['To'] = to_email
         msg['Subject'] = "📌 Task Reminder"
 
-        # 🎨 PREMIUM HTML EMAIL
+        
         html = f"""
         <html>
         <body style="margin:0; padding:0; font-family:'Times New Roman', serif; background: linear-gradient(135deg, #5f2c82, #49a09d);">
 
-            <div style="
-            width:100%;
-            height:100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:40px 0;
-            ">
+            <div style="width:100%; height:100%; display:flex; justify-content:center; align-items:center; padding:40px 0;">
          
-            <div style="background:white; max-width:420px; width:90%; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); text-align:center;">
+                <div style="background:white; max-width:420px; width:90%; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); text-align:center;">
                     
                     <h2 style="color:#5f2c82;">📚 Task Reminder</h2>
 
@@ -82,21 +72,15 @@ def send_email(to_email, name, title, status_text):
                         <p style="color:gray;">Stay on track and complete your task on time⏰</p>
                     </div>
 
-                    <p style="
-                    margin-top:20px;
-                    font-size:15px;
-                    color:#555;
-                    ">
-                    🚀Login to your dashboard to update task status
+                    <p style="margin-top:20px; font-size:15px; color:#555;">
+                        🚀 Login to your dashboard to update task status
                     </p>
-                       
 
                     <p style="margin-top:25px; font-size:14px; color:gray;">
                         Task Prioritization & Deadline Management System
                     </p>
 
                 </div>
-
             </div>
 
         </body>
@@ -104,17 +88,15 @@ def send_email(to_email, name, title, status_text):
         """
 
         msg.attach(MIMEText(html, 'html'))
-
         server.sendmail(EMAIL, to_email, msg.as_string())
         server.quit()
 
-        print("✅ Premium Email Sent")
+        print("✅ Premium Email Sent to:", to_email)
 
     except Exception as e:
         print("❌ Email error:", e)
 
 # ---------------- LOGIN ----------------
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     cur = mysql.connection.cursor()
@@ -127,12 +109,12 @@ def login():
         user = cur.fetchone()
 
         if user:
-            stored_password = user[3]   
+            stored_password = user[3]
             if isinstance(stored_password, bytes):
                 stored_password = stored_password.decode('utf-8')
 
             if check_password_hash(stored_password, password):
-                session['user_id'] = user[0]   
+                session['user_id'] = user[0]
                 return redirect('/dashboard')
             else:
                 return render_template('login.html', error="Wrong password!")
@@ -140,16 +122,16 @@ def login():
             return render_template('login.html', error="User not found!")
 
     return render_template('login.html')
-
+#---------------- LOGOUT ----------------
 @app.route('/logout')
 def logout():
-    session.clear()  
+    session.clear()
     return redirect('/')
-
+#---------------- HOME ----------------
 @app.route('/home')
 def home():
     return redirect('/login')
-
+#---------------- FORGOT ----------------
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
     if request.method == 'POST':
@@ -173,7 +155,7 @@ def forgot():
             return "Email not found ❌"
 
     return render_template('forgot.html')
-
+#---------------- SEND OTP ----------------
 def send_otp_email(to_email, otp):
     sender_email = EMAIL
     app_password = PASSWORD
@@ -189,7 +171,7 @@ def send_otp_email(to_email, otp):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(sender_email, app_password)
         server.send_message(msg)
-
+#---------------- VERIFY ----------------
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
     if request.method == 'POST':
@@ -204,7 +186,7 @@ def verify():
             return render_template('verify.html', error="invalid")
 
     return render_template('verify.html')
-
+#---------------- RESEND ----------------
 @app.route('/resend')
 def resend():
     email = session.get('reset_email')
@@ -218,7 +200,7 @@ def resend():
         send_otp_email(email, otp)
 
     return redirect('/verify')
-
+#---------------- RESET ----------------
 @app.route('/reset', methods=['GET', 'POST'])
 def reset():
     if request.method == 'POST':
@@ -237,14 +219,13 @@ def reset():
                     (hashed_password, email))
         mysql.connection.commit()
 
-        return redirect('/login')
+        return render_template("reset.html", success=True)
 
-    return render_template('reset.html')
-
-
+    return render_template('reset.html', success=False)
 # ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
     if request.method == 'POST':
         fullname = request.form['fullname']
         email = request.form['email']
@@ -254,11 +235,10 @@ def register():
 
         cur = mysql.connection.cursor()
 
+        # check existing user
         cur.execute("SELECT * FROM users WHERE email=%s", (email,))
-        existing_user = cur.fetchone()
-
-        if existing_user:
-            return render_template("register.html", error="Email already exists")
+        if cur.fetchone():
+            return render_template("register.html", popup=True)
 
         hashed_password = generate_password_hash(password)
 
@@ -268,21 +248,18 @@ def register():
         """, (fullname, email, hashed_password, phone, regno))
 
         mysql.connection.commit()
-
         session['register_success'] = True
-        return redirect('/register')
+        return redirect(url_for('register'))
+    success = session.pop('register_success', None)
 
-    return render_template('register.html')
-
+    return render_template('register.html', success=success)
 # ---------------- DASHBOARD ----------------
 @app.route('/dashboard')
 def dashboard():
-
     if 'user_id' not in session:
         return redirect('/')
 
     cur = mysql.connection.cursor()
-
     cur.execute("""
         SELECT id, title, deadline, importance, difficulty, priority, status
         FROM tasks
@@ -291,12 +268,7 @@ def dashboard():
 
     tasks = cur.fetchall()
 
-    # 🔢 COUNTS
-    total = len(tasks)
-    completed = len([t for t in tasks if t[6] == 'Completed'])
-    pending = len([t for t in tasks if t[6] != 'Completed'])
-
-    # 🔔 NOTIFICATIONS
+    # 🔔 Notifications
     notifications = []
     today = date.today()
 
@@ -305,13 +277,17 @@ def dashboard():
         days_left = (deadline - today).days
 
         if days_left < 0:
-         notifications.append(f"⚠️ {task[1]} is OVERDUE")
+            notifications.append(f"⚠️ {task[1]} is OVERDUE")
         elif days_left == 0:
-         notifications.append(f"📅 {task[1]} is TODAY")
+            notifications.append(f"📅 {task[1]} is TODAY")
         else:
-          notifications.append(f"⏳ {task[1]} - {days_left} day(s) left")
+            notifications.append(f"⏳ {task[1]} - {days_left} day(s) left")
 
-    # ✅ RETURN MUST BE INSIDE FUNCTION
+    total = len(tasks)
+
+    completed = sum(1 for t in tasks if t[6] == "Completed")
+    pending = total - completed
+
     return render_template(
         "dashboard.html",
         tasks=tasks,
@@ -320,23 +296,20 @@ def dashboard():
         pending=pending,
         notifications=notifications
     )
-    
-
+# ----------------COMPLETE----------------
 @app.route('/complete/<int:id>')
 def complete(id):
     cur = mysql.connection.cursor()
     cur.execute("UPDATE tasks SET status='Completed' WHERE id=%s", (id,))
     mysql.connection.commit()
     return redirect('/dashboard')
-
-
+# ----------------DELETE----------------
 @app.route('/delete/<int:id>')
 def delete(id):
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM tasks WHERE id=%s", (id,))
     mysql.connection.commit()
     return redirect('/dashboard')
-
 # ---------------- ADD TASK ----------------
 @app.route('/add', methods=['POST'])
 def add_task():
@@ -348,25 +321,17 @@ def add_task():
     difficulty = request.form['difficulty']
     importance = request.form['importance']
 
-    # 🔥 SIMPLE PRIORITY LOGIC
-    if importance == "High":
-        priority = "High"
-    elif importance == "Medium":
-        priority = "Medium"
-    else:
-        priority = "Low"
+    priority = importance
 
     cur = mysql.connection.cursor()
-
     cur.execute("""
         INSERT INTO tasks(title, deadline, difficulty, importance, priority, status, user_id, last_remainder)
         VALUES (%s, %s, %s, %s, %s, 'Pending', %s, NULL)
     """, (title, deadline, difficulty, importance, priority, session['user_id']))
-    
-    mysql.connection.commit()
 
+    mysql.connection.commit()
     return redirect('/dashboard')
-# ---------------- DAILY REMINDER LOGIC ----------------
+# ---------------- CHECK DEADLINES ----------------
 def check_deadlines():
     print("🚀 Scheduler running...")
 
@@ -381,8 +346,7 @@ def check_deadlines():
             JOIN users ON tasks.user_id = users.id
         """)
 
-        tasks = cur.fetchall()   # ✅ MUST BE HERE
-
+        tasks = cur.fetchall()
         print("TOTAL TASKS:", len(tasks))
 
         today = date.today()
@@ -390,12 +354,9 @@ def check_deadlines():
         for task in tasks:
             task_id, title, deadline, email, name, last_remainder, status = task
 
-            # ❌ skip completed
             if status == "Completed":
                 continue
-
-            # ✅ once per day
-            if last_remainder is not None and last_remainder == today:
+            if last_remainder is not None and last_remainder == today: #✅
                 continue
 
             deadline = datetime.strptime(str(deadline), "%Y-%m-%d").date()
@@ -409,32 +370,17 @@ def check_deadlines():
                 status_text = f"⏳ {days_left} day(s) left"
 
             print("📤 Sending:", title)
-
             send_email(email, name, title, status_text)
 
-            cur.execute("""
-                UPDATE tasks SET last_remainder=%s
-                WHERE id=%s
-            """, (today, task_id))
-
+            cur.execute("UPDATE tasks SET last_remainder=%s WHERE id=%s", (today, task_id))
             mysql.connection.commit()
-
-# ---------------- RUN APP ----------------
-import os
-
+# ---------------- SCHEDULER & RUN ----------------
 if __name__ == '__main__':
-
-    # 🔥 START SCHEDULER FIRST
     scheduler = BackgroundScheduler(daemon=True)
-
     #scheduler.add_job(check_deadlines, 'cron', hour=9, minute=0)
-    # testing:
-    #scheduler.add_job(check_deadlines, 'interval', minutes=1)
+    scheduler.add_job(check_deadlines, 'interval', minutes=1) #--------------testing
     #scheduler.add_job(check_deadlines, 'interval', hours=12)
-    scheduler.add_job(check_deadlines, 'interval', hours=12, next_run_time=datetime.now())
     scheduler.start()
     print("✅ Scheduler started")
-
-    # 🔥 RENDER PORT FIX
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, use_reloader=False)
